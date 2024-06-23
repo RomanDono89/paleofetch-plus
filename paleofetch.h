@@ -3,6 +3,7 @@
 
 static char *get_title(),
             *get_bar(),
+	    *test(),
             *get_os(),
             *get_kernel(),
             *get_host(),

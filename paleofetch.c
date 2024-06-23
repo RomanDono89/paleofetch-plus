@@ -1,4 +1,5 @@
 #pragma GCC diagnostic ignored "-Wunused-function"
+#include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -304,6 +305,7 @@ static char *get_shell() {
 
     return shell;
 }
+
 
 static char *get_resolution() {
     int screen, width, height;
@@ -684,11 +686,45 @@ char *get_value(struct conf c, int read_cache, char *cache_data) {
 
     return value;
 }
+static char *test(){
+	char *a = malloc(sizeof("test"));
+	snprintf(a,sizeof("test"),"test");
+	return a;
+}
 
+char *cortar(w, lengthstr)
+char *w;
+int lengthstr;
+{
+	int i = 0;
+	char *q = malloc(sizeof(char) * (lengthstr+1));
+
+	while(i < lengthstr && *(w+i)){
+	*(q+i) = *(w+i);
+	i++;
+}
+
+	*(q+i) = 0;
+
+	return q;
+}
+void forwardstring(w, l)
+char *w;
+int l;
+{
+	while(*(w+l)){
+	*w = *(w+l);
+	w++;
+}
+	*w = 0;
+}
 int main(int argc, char *argv[]) {
     char *cache, *cache_data = NULL;
     FILE *cache_file;
     int read_cache;
+
+    struct winsize w; //get the wideness of the terminal under w.ws_col
+    ioctl(0, TIOCGWINSZ, &w);
 
     status = uname(&uname_info);
     halt_and_catch_fire("uname failed");
@@ -712,24 +748,37 @@ int main(int argc, char *argv[]) {
         fclose(cache_file); // We just need the first (and only) line.
     }
 
+	char tmpstring[600];
     int offset = 0;
-
-    for (int i = 0; i < COUNT(LOGO); i++) {
+    int pvalue = 0;
+    char *asd;
+    for (int i = 0; i < COUNT(LOGO); i++, pvalue++) {
         // If we've run out of information to show...
-        if(i >= COUNT(config) - offset) // just print the next line of the logo
+        if(pvalue >= COUNT(config) - offset) // just print the next line of the logo
             printf(COLOR"%s\n", LOGO[i]);
         else {
             // Otherwise, we've got a bit of work to do.
-            char *label = config[i+offset].label,
-                 *value = get_value(config[i+offset], read_cache, cache_data);
+            char *label = config[pvalue+offset].label,
+                 *value = get_value(config[pvalue+offset], read_cache, cache_data);
             if (strcmp(value, "") != 0) { // check if value is an empty string
+		if(w.ws_col > (strlen(LOGO[i]) + strlen(label) + strlen(value)))
                 printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, value); // just print if not empty
+		else {
+		asd = cortar(value, (w.ws_col - (strlen(LOGO[i]) + strlen(label))));
+                printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, asd);
+		free(asd);
+		if((i+1) < COUNT(LOGO)){
+		forwardstring(value,(w.ws_col - (strlen(LOGO[i]) + strlen(label))));
+                printf(COLOR"%s\e[0m%s\n", LOGO[++i], value);
+				
+}
+}
             } else {
                 if (strcmp(label, "") != 0) { // check if label is empty, otherwise it's a spacer
                     ++offset; // print next line of information
                     free(value); // free memory allocated for empty value
-                    label = config[i+offset].label; // read new label and value
-                    value = get_value(config[i+offset], read_cache, cache_data);
+                    label = config[pvalue+offset].label; // read new label and value
+                    value = get_value(config[pvalue+offset], read_cache, cache_data);
                 }
                 printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, value);
             }
@@ -754,3 +803,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
