@@ -14,4 +14,4 @@ paleofetch: paleofetch.c paleofetch.h config.h
 
 install: paleofetch
 	mkdir -p $(PREFIX)/bin
-	install ./paleofetch /bin/paleofetch-bin
+	install ./paleofetch /bin/paleofetch-plus
