@@ -763,10 +763,16 @@ int main(int argc, char *argv[]) {
             if (strcmp(value, "") != 0) { // check if value is an empty string
 		if(w.ws_col > (strlen(LOGO[i]) + strlen(label) + strlen(value)))
                 printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, value); // just print if not empty
-		else {
+
+		else if(w.ws_col < (strlen(LOGO[i]) + strlen(label) + 5)){
+		fputs("wideness is to small\n", stderr);
+		exit(-1);
+
+		}else{
 		asd = cortar(value, (w.ws_col - (strlen(LOGO[i]) + strlen(label))));
                 printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, asd);
 		free(asd);
+
 		if((i+1) < COUNT(LOGO)){
 		forwardstring(value,(w.ws_col - (strlen(LOGO[i]) + strlen(label))));
                 printf(COLOR"%s\e[0m%s\n", LOGO[++i], value);
