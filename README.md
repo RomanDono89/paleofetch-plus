@@ -1,15 +1,13 @@
-paleofetch
+paleofetch-plus
 ==========
 
 A rewrite of [neofetch](https://github.com/dylanaraps/neofetch) in C.
 Currently only supports Linux and Xorg.
 
 
-Why use paleofetch over neofetch?
+Why use paleofetch-plus over plain paleofetch?
 -----------------------------------------
-One major reason is the performance improvement. For example: neofetch finishes running after about 222 milliseconds where as paleofetch can finish running in a blazing fast 3 milliseconds.
-
-Note: this testing occured on only 1 computer, it's not a good representation on the performance benefit you may gain.
+simply because I decided to add some sensible features to it, one example being the ability to print the values dependending on the wideness, thus not shifting the logo under the wrongly printed information
 
 
 Example output:
@@ -19,7 +17,7 @@ Example output:
 Dependencies
 ------------
 
-Paleofetch requires `libX11` and `libpci`. If you're running Xorg you should already have
+Paleofetch-plus requires `libX11` and `libpci`. If you're running Xorg you should already have
 the former. On Arch Linux, you should have `libpci` already installed if you have `pciutils`
 installed. On other linux distrobutions, you may need to install libpci seperatley
 if its not already present.
@@ -34,12 +32,12 @@ Usage
 
 After compiling, simply run the executable:
 
-    paleofetch
+    paleofetch-plus
 
-By default, `paleofetch` will cache certain  information (in `$XDG_CACHE_HOME/paleofetch`)
+By default, `paleofetch-plus` will cache certain  information (in `$XDG_CACHE_HOME/paleofetch`)
 to speed up subsequent calls. To ignore the contents of the cache (and repopulate it), run
 
-    paleofetch --recache
+    paleofetch-plus --recache
 
 The cache file can safely be removed at any time, paleofetch will repopulate it
 if it is absent.
@@ -47,21 +45,21 @@ if it is absent.
 Configuration
 -------------
 
-Paleofetch is configured by editing `config.h` and recompiling.
+Paleofetch-plus is configured by editing `config.h` and recompiling.
 You can change your logo by including the appropriate header file in the logos directory.
 The color with which paleo fetch draws the logo can be chosen by defining the `COLOR` macro,
 look up ANSI escape codes for information on customizing this.
 
-The last configuration is the `CONFIG` macro, which controls what information paleofetch
+The last configuration is the `CONFIG` macro, which controls what information paleofetch-plus
 prints. Each entry in this macro should look like
 
     { "NAME: ",   getter_function, false }, \
     
 Take note of the trailing comma and backslash. The first piece, `"NAME: "`, sets
-what paleofetch prints before printing the information; this usually tells you what
+what paleofetch-plus prints before printing the information; this usually tells you what
 bit of information is being shown. Note that the name entry should be unique for entries
 which are to be cached. The second piece, `getter_function`, sets
-which function paleofetch will call display. Current available getter functions are
+which function paleofetch-plus will call display. Current available getter functions are
 
 * `get_title`: prints `host@user` like in a bash prompt. Host and user will be printed in color.
 * `get_bar`: Meant to be added after `get_title`, underlines the title
@@ -76,13 +74,12 @@ which function paleofetch will call display. Current available getter functions 
 * `get_cpu`: Prints the name of your CPU, number of cores, and maximum frequency
 * `get_gpu1`, `get_gpu2`: Print the GPU on your system. If you don't have both integrated graphics and an external GPU, `get_gpu2` will likely be blank
 * `get_gpu`: (Tries to) print your current GPU
-* `get_colors1`, `get_colors2`: Prints the colors of your terminal
 
 To include a blank line between entries, put `SPACER \` between the two lines
 you want to separate.
 
-The booleans in `CONFIG` tell paleofetch whether you want to cache an entry.
-When cached, paleofetch will save the value and not recompute it whenever you run paleofetch
+The booleans in `CONFIG` tell paleofetch-plus whether you want to cache an entry.
+When cached, paleofetch-plus will save the value and not recompute it whenever you run paleofetch-plus
 (unless you specify the `--recache` option).
 
 The CPU and GPU name can be configured as well. This is done under the CPU_CONFIG and GPU_CONFIG section
@@ -91,7 +88,7 @@ in the config.h file. Two macros are provided to customize and tidy up the model
 * `REMOVE(string)`: removes the first occurence of `string`
 * `REPLACE(string1, string2)`: replaces the first occurence of `string1` with `string2`
 
-Don't forget to run paleofetch with the --recache flag after compiling it with your new
+Don't forget to run paleofetch-plus with the --recache flag after compiling it with your new
 configuration, otherwise it will still show the old name for already cached entries.
 
 FAQ
