@@ -751,6 +751,7 @@ int main(int argc, char *argv[]) {
 	char tmpstring[600];
     int offset = 0;
     int pvalue = 0;
+    int longness = 0;
     char *asd;
     for (int i = 0; i < COUNT(LOGO); i++, pvalue++) {
         // If we've run out of information to show...
@@ -764,19 +765,23 @@ int main(int argc, char *argv[]) {
 		if(w.ws_col > (strlen(LOGO[i]) + strlen(label) + strlen(value)))
                 printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, value); // just print if not empty
 
-		else if(w.ws_col < (strlen(LOGO[i]) + strlen(label) + 5)){
+		else if(w.ws_col < (strlen(LOGO[i]) + strlen(label)) + 2){
 		fputs("wideness is to small\n", stderr);
 		exit(-1);
 
 		}else{
-		asd = cortar(value, (w.ws_col - (strlen(LOGO[i]) + strlen(label))));
+		longness = (w.ws_col - (strlen(LOGO[i]) + strlen(label)));
+		asd = cortar(value, longness);
                 printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, asd);
 		free(asd);
 
-		if((i+1) < COUNT(LOGO)){
-		forwardstring(value,(w.ws_col - (strlen(LOGO[i]) + strlen(label))));
-                printf(COLOR"%s\e[0m%s\n", LOGO[++i], value);
-				
+		while((i+1) < COUNT(LOGO) && strlen(value) > longness){
+		forwardstring(value, longness);
+		longness = (w.ws_col - strlen(LOGO[i]));
+
+		asd = cortar(value, longness);
+                printf(COLOR"%s\e[0m%s\n", LOGO[++i], asd);
+		free(asd);
 }
 }
             } else {
