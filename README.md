@@ -93,8 +93,8 @@ configuration, otherwise it will still show the old name for already cached entr
 
 TO DO
 -----
-*Make the code cleaner.
-*Maybe adding options for other distros that are not arch.
+* Make the code cleaner.
+* Maybe adding options for other distros that are not arch.
 
 FAQ
 ---
