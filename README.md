@@ -91,6 +91,11 @@ in the config.h file. Two macros are provided to customize and tidy up the model
 Don't forget to run paleofetch-plus with the --recache flag after compiling it with your new
 configuration, otherwise it will still show the old name for already cached entries.
 
+TO DO
+-----
+*Make the code cleaner.
+*Maybe adding options for other distros that are not arch.
+
 FAQ
 ---
 
