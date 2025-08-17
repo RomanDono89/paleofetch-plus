@@ -686,22 +686,6 @@ char *get_value(struct conf c, int read_cache, char *cache_data) {
     return value;
 }
 
-char *cutstr(w, lengthstr)
-char *w;
-int lengthstr;
-{
-	int i = 0;
-	char *q = malloc(sizeof(char) * (lengthstr+1));
-
-	while(i < lengthstr && w[i]){
-	q[i] = w[i];
-	i++;
-}
-
-	q[i] = 0;
-
-	return q;
-}
 void forwardstring(w, l)
 char *w;
 int l;
@@ -765,17 +749,13 @@ int main(int argc, char *argv[]) {
 
 		}else{
 		longness = (w.ws_col - (strlen(LOGO[i]) + strlen(label)));
-		asd = cutstr(value, longness);
-                printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, asd);
-		free(asd);
+                printf(COLOR"%s%s\e[0m%.*s\n", LOGO[i], label, longness,value);
 
 		while((i+1) < COUNT(LOGO) && strlen(value) > longness){
 		forwardstring(value, longness);
 		longness = (w.ws_col - strlen(LOGO[i]));
 
-		asd = cutstr(value, longness);
-                printf(COLOR"%s\e[0m%s\n", LOGO[++i], asd);
-		free(asd);
+                printf(COLOR"%s\e[0m%.*s\n", LOGO[++i], longness,value);
 }
 }
             } else {
