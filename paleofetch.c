@@ -679,32 +679,26 @@ char *get_value(struct conf c, int read_cache, char *cache_data) {
         if(c.cached) { // and append it to our cache data if appropriate
             char *buf = malloc(BUF_SIZE);
             sprintf(buf, "%s=%s;", c.label, value);
-            strcat(cache_data, buf);
-            free(buf);
+            strcat(cache_data, buf); free(buf);
         }
     }
 
     return value;
 }
-static char *test(){
-	char *a = malloc(sizeof("test"));
-	snprintf(a,sizeof("test"),"test");
-	return a;
-}
 
-char *cortar(w, lengthstr)
+char *cutstr(w, lengthstr)
 char *w;
 int lengthstr;
 {
 	int i = 0;
 	char *q = malloc(sizeof(char) * (lengthstr+1));
 
-	while(i < lengthstr && *(w+i)){
-	*(q+i) = *(w+i);
+	while(i < lengthstr && w[i]){
+	q[i] = w[i];
 	i++;
 }
 
-	*(q+i) = 0;
+	q[i] = 0;
 
 	return q;
 }
@@ -712,8 +706,8 @@ void forwardstring(w, l)
 char *w;
 int l;
 {
-	while(*(w+l)){
-	*w = *(w+l);
+	while(w[l] != '\0'){
+	*w = w[l];
 	w++;
 }
 	*w = 0;
@@ -771,7 +765,7 @@ int main(int argc, char *argv[]) {
 
 		}else{
 		longness = (w.ws_col - (strlen(LOGO[i]) + strlen(label)));
-		asd = cortar(value, longness);
+		asd = cutstr(value, longness);
                 printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, asd);
 		free(asd);
 
@@ -779,7 +773,7 @@ int main(int argc, char *argv[]) {
 		forwardstring(value, longness);
 		longness = (w.ws_col - strlen(LOGO[i]));
 
-		asd = cortar(value, longness);
+		asd = cutstr(value, longness);
                 printf(COLOR"%s\e[0m%s\n", LOGO[++i], asd);
 		free(asd);
 }
