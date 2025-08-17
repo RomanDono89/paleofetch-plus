@@ -686,16 +686,6 @@ char *get_value(struct conf c, int read_cache, char *cache_data) {
     return value;
 }
 
-void forwardstring(w, l)
-char *w;
-int l;
-{
-	while(w[l] != '\0'){
-	*w = w[l];
-	w++;
-}
-	*w = 0;
-}
 int main(int argc, char *argv[]) {
     char *cache, *cache_data = NULL;
     FILE *cache_file;
@@ -740,22 +730,24 @@ int main(int argc, char *argv[]) {
             char *label = config[pvalue+offset].label,
                  *value = get_value(config[pvalue+offset], read_cache, cache_data);
             if (strcmp(value, "") != 0) { // check if value is an empty string
-		if(w.ws_col > (strlen(LOGO[i]) + strlen(label) + strlen(value)))
-                printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, value); // just print if not empty
+		if(w.ws_col > (strlen(LOGO[i]) + strlen(label) + strlen(value))){ // print if not empty and wideness is enough
+                printf(COLOR"%s%s\e[0m%s\n", LOGO[i], label, value);
 
-		else if(w.ws_col < (strlen(LOGO[i]) + strlen(label)) + 2){
+		} else if(w.ws_col < (strlen(LOGO[i]) + strlen(label)) + 3){
 		fputs("wideness is to small\n", stderr);
 		exit(-1);
 
-		}else{
-		longness = (w.ws_col - (strlen(LOGO[i]) + strlen(label)));
+		} else {
+                //value is allocated with malloc, so in order to forward "value" and still be able to free it, I am going to clone the value to another variable.
+                char *valdecoy = value;
+		longness = /*calculate how long can "value" be*/ (w.ws_col - strlen(LOGO[i]) - strlen(label));
                 printf(COLOR"%s%s\e[0m%.*s\n", LOGO[i], label, longness,value);
 
-		while((i+1) < COUNT(LOGO) && strlen(value) > longness){
-		forwardstring(value, longness);
+		while((i+1) < COUNT(LOGO) && strlen(valdecoy) > longness){
+                valdecoy += longness;
 		longness = (w.ws_col - strlen(LOGO[i]));
 
-                printf(COLOR"%s\e[0m%.*s\n", LOGO[++i], longness,value);
+                printf(COLOR"%s\e[0m%.*s\n", LOGO[++i], longness,valdecoy);
 }
 }
             } else {
